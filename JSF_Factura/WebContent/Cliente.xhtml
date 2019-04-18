@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/templateLayout.xhtml">
+	<ui:define name="tituloPagina">Clientes</ui:define>
+	<ui:define name="tituloFormulario">Formulario de Clientes</ui:define>
+	<ui:define name="contenido">
+
+		<h:form id="formclientes">
+
+			<p:panelGrid id="ingreso" columns="3">
+
+
+				<h:outputText value="Código: " />
+				<p:inputText id="txtcodigoC" maxlength="10"
+					value="#{controladorCliente.cliente.codigoC}"
+					onkeypress="return validarEnteros(event)"
+					disabled="#{controladorCliente.paraingresar}" />
+					<p:message for="txtcodigoC" />
+
+				<h:outputText value="Cédula: " />
+				<p:inputText id="txtcedula" maxlength="10"
+					value="#{controladorCliente.cliente.cedula}"
+					onkeypress="return validarEnteros(event)" />
+				<p:message for="txtcedula" />
+				
+				
+				<h:outputText value="Nombre: " />
+				<p:inputText id="txtnombre" maxlength="25"
+					value="#{controladorCliente.cliente.nombre}" />
+
+				<p:message for="txtnombre" />
+				
+				<h:outputText value="Apellido: " />
+				<p:inputText id="txtapellido" maxlength="25"
+					value="#{controladorCliente.cliente.apellido}" />
+				<p:message for="txtapellido" />
+				
+				
+				<h:outputText value="Dirección: " />
+				<p:inputText id="txtdireccion" maxlength="50" size="50"
+					value="#{controladorCliente.cliente.direccion}" />
+
+				<p:message for="txtdireccion" />
+				
+				<h:outputText value="Nacionalidad: " />
+				<p:selectOneMenu id="cbnacionalidad" required="true"
+					validatorMessage="Error" requiredMessage="Errror"
+					value="#{controladorCliente.idnacionalidad}">
+					<f:selectItem itemLabel="Seleccione" itemValue="0" />
+					<f:selectItems value="#{controladorCliente.nacionalidades}"
+						var="itemnacionalidad" itemLabel="#{itemnacionalidad.gentilicio}"
+						itemValue="#{itemnacionalidad.id}">
+					</f:selectItems>
+				</p:selectOneMenu>
+				<p:message for="formclientes:cbnacionalidad" />
+
+
+
+
+
+
+
+
+
+
+
+
+			</p:panelGrid>
+			<br />
+			<h:panelGrid columns="2">
+				<p:commandButton action="#{controladorCliente.insertarcliente()}"
+					value="Insertar" update="@form"
+					disabled="#{controladorCliente.paraingresar}" />
+
+				<p:commandButton action="#{controladorCliente.actualizarcliente()}"
+					value="Actualizar" update="@form"
+					disabled="#{controladorCliente.paraactualizar}" />
+
+
+			</h:panelGrid>
+			<br />
+			<p:messages></p:messages>
+			<p:growl></p:growl>
+
+			<p:dataTable value="#{controladorCliente.clienteesiniciales}"
+				var="iter" width="800" border="3" rows="3" paginator="true"
+				paginatorPosition="bottom" emptyMessage="No existen registros"
+				rowsPerPageTemplate="3,5,10">
+				<f:facet name="header">
+					<h:outputText value="Lista de Clientes" />
+				</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Id" />
+					</f:facet>
+					<h:outputText value="#{iter.codigoC}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="cedula" />
+					</f:facet>
+					<h:outputText value="#{iter.cedula}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Nombre" />
+					</f:facet>
+					<h:outputText value="#{iter.nombre}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Apellido" />
+					</f:facet>
+					<h:outputText value="#{iter.apellido}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Dirección" />
+					</f:facet>
+					<h:outputText value="#{iter.direccion}" />
+				</p:column>
+
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Nacionalidad" />
+					</f:facet>
+					<h:outputText value="#{iter.nacionalidad.gentilicio}" />
+				</p:column>
+
+				<p:column>
+					<p:commandButton value="Seleccionar" update="@form" process="@this"
+						action="#{controladorCliente.seleccionar()}">
+						<f:setPropertyActionListener value="#{iter}"
+							target="#{controladorCliente.cliente}"></f:setPropertyActionListener>
+					</p:commandButton>
+				</p:column>
+
+				<p:column>
+					<p:commandButton onclick="PF('dialog').show();" value="Eliminar"
+						process="@this">
+						<f:setPropertyActionListener value="#{iter}"
+							target="#{controladorCliente.cliente}"></f:setPropertyActionListener>
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+		<p:dialog id="dlg1" widgetVar="dialog" header="Diálogo" modal="true">
+			<h:form id="formdialogo">
+				<h:outputText value="Esta Seguro que desea eliminar los datos   " />
+				<p:commandButton action="#{controladorCliente.eliminarcliente()}"
+					value="Aceptar" update=":formclientes" />
+				<p:commandButton value="Cancelar" onclick="dialog.hide()" />
+
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+	<ui:define name="autor">Claudio Jiménez Ochoa</ui:define>
+	<h:messages />
+</ui:composition>
+</html>

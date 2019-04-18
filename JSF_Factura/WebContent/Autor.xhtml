@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/templateLayout.xhtml">
+	<ui:define name="tituloPagina">Autores</ui:define>
+	<ui:define name="tituloFormulario">Formulario Autor</ui:define>
+	<ui:define name="contenido">
+
+		<h:form id="formautores">
+
+			<p:panelGrid id="ingreso" columns="3">
+				<h:outputText value="Código: " />
+				<p:inputText id="txtcodigo" maxlength="10"
+					value="#{autorControlador.autor.codigo}"
+					onkeypress="return validarEnteros(event)"
+					disabled="#{autorControlador.paraIngresar}" />
+				<p:message for="txtcodigo" />
+
+				<h:outputText value="Nombre: " />
+				<p:inputText id="txtnombre" value="#{autorControlador.autor.nombre}" />
+				<p:message for="txtnombre" />
+				<h:outputText value="Apellido: " />
+				<p:inputText id="txtapellido"
+					value="#{autorControlador.autor.apellido}" />
+				<p:message for="txtapellido" />
+				<h:outputText value="Nacionalidad: " />
+				<p:selectOneMenu id="cbnacionalidad"
+					value="#{autorControlador.idNacionalidad}">
+					<f:selectItem itemLabel="Seleccione" itemValue="0" />
+					<f:selectItems value="#{autorControlador.nacionalidadesRecuperadas}"
+						var="itemnacionalidad" itemLabel="#{itemnacionalidad.nombre}"
+						itemValue="#{itemnacionalidad.id}">
+					</f:selectItems>
+				</p:selectOneMenu>
+				<p:message for="cbnacionalidad" />
+
+
+			</p:panelGrid>
+			<br />
+			<h:panelGrid columns="2">
+				<p:commandButton action="#{autorControlador.ingresarAutor()}"
+					value="Insertar" update="@form"
+					disabled="#{autorControlador.paraIngresar}" />
+
+				<p:commandButton action="#{autorControlador.actualizarAutor()}"
+					value="Actualizar" update="@form"
+					disabled="#{autorControlador.paraActualizar}" />
+			</h:panelGrid>
+			<br />
+			<p:messages></p:messages>
+			<p:growl></p:growl>
+
+			<p:dataTable value="#{autorControlador.autoresRecuperados}" var="iter"
+				width="500" border="3" rows="3" paginator="true"
+				paginatorPosition="bottom" emptyMessage="No existen registros"
+				rowsPerPageTemplate="3,5,10">
+				<f:facet name="header">
+					<h:outputText value="Lista de Autores" />
+				</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Id" />
+					</f:facet>
+					<h:outputText value="#{iter.codigo}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Nombre" />
+					</f:facet>
+					<h:outputText value="#{iter.nombre}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Apellido" />
+					</f:facet>
+					<h:outputText value="#{iter.apellido}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Nacionalidad" />
+					</f:facet>
+					<h:outputText value="#{iter.nacionalidad.nombre}" />
+				</p:column>
+
+				<p:column>
+					<p:commandButton value="Seleccionar" update="@form" process="@this"
+						action="#{autorControlador.seleccionarAutor()}">
+						<f:setPropertyActionListener value="#{iter}"
+							target="#{autorControlador.autor}"></f:setPropertyActionListener>
+					</p:commandButton>
+				</p:column>
+
+				<p:column>
+					<p:commandButton onclick="PF('dialog').show();" value="Eliminar"
+						process="@this">
+						<f:setPropertyActionListener value="#{iter}"
+							target="#{autorControlador.autor}"></f:setPropertyActionListener>
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+	<ui:define name="dialogo">
+		<p:dialog id="dlg1" widgetVar="dialog" header="Diálogo" modal="true">
+			<h:form id="formdialogo">
+				<h:outputText value="Esta Seguro que desea eliminar los datos   " />
+				<p:commandButton action="#{autorControlador.eliminarAutor()}"
+					value="Aceptar" update=":formautores" />
+				<p:commandButton value="Cancelar" onclick="dialog.hide()" />
+
+			</h:form>
+		</p:dialog>
+	</ui:define>
+	<ui:define name="autor">Claudio Jiménez Ochoa</ui:define>
+	<h:messages />
+</ui:composition>
+</html>

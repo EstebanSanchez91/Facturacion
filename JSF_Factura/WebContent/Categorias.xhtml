@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/templates/templateLayout.xhtml">
+	<ui:define name="tituloPagina">Datos Categoria </ui:define>
+	<ui:define name="tituloFormulario">Formulario Datos Categoria</ui:define>
+	<ui:define name="contenido">
+	<h:form id="frm1">
+			<p:panelGrid columns="2">
+				<h:outputText value="Codigo: " />
+				<p:inputText id="txtCodigo" value="#{categoriaControlador.categoria.id}"
+					onkeypress="return validarEnteros(event)"
+					disabled="#{controladorAutor.paraIngresar}" />
+				<h:outputText value="Nombre: " />
+				<p:inputText id="txtNombre" value="#{categoriaControlador.categoria.nombre}"
+					onkeypress="return validarNombres(event)" />
+				<h:outputText value="Descripcion: " />
+				<p:inputText id="txtApellido"
+					value="#{categoriaControlador.categoria.descripcion}"
+					onkeypress="return validarNombres(event)" />				
+			</p:panelGrid>
+			<p:commandButton value="Insertar"
+				action="#{categoriaControlador.ingresarCategoria()}" update="@form"
+				disabled="#{categoriaControlador.paraIngresar}" />
+			<p:commandButton value="Actualizar"
+				action="#{categoriaControlador.ingresarCategoria()}" update="@form"
+				disabled="#{categoriaControlador.paraActualizar}" />
+
+			<p:dataTable rows="3" paginator="true" paginatorPosition="bottom"
+				emptyMessage="No hay reguistros" value="#{categoriaControlador.categoriasRecuperadas}"
+				var="iter" border="1">
+				<f:facet name="header">
+					<h:outputText value="Autores" />
+				</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="ID" />
+					</f:facet>
+					<h:outputText value="#{iter.id}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Nombre" />
+					</f:facet>
+					<h:outputText value="#{iter.nombre}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Descripcion" />
+					</f:facet>
+					<h:outputText value="#{iter.descripcion}" />
+				</p:column>				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Acciones" />
+					</f:facet>
+					<p:commandButton value="Seleccionar"
+						action="#{categoriaControlador.seleccionarCategoria()}" update="@form"
+						process="@this">
+						<f:setPropertyActionListener value="#{iter}"
+							target="#{categoriaControlador.categoria}"></f:setPropertyActionListener>
+					</p:commandButton>
+					<p:commandButton value="Eliminar" process="@this"
+						onclick="PF('dialog').show();">
+						<f:setPropertyActionListener value="#{iter}"
+							target="#{categoriaControlador.categoria}"></f:setPropertyActionListener>
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:growl />
+		</h:form>
+
+		<p:dialog id="dlg1" widgetVar="dialog" header="Dialogo" modal="true">
+			<h:form id="frm2">
+				<h:outputText value="Esta seguro de eliminar el registro?" />
+				<p:commandButton value="SI"
+					action="#{categoriaControlador.eliminarCategoria()}" update=":frm1" />
+				<p:commandButton value="NO" onclick="dialog.hide()" />
+			</h:form>
+		</p:dialog>	
+	</ui:define>
+	</ui:composition>
+</html>

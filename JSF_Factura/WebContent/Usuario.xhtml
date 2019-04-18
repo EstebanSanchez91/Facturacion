@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/clearTemplate.xhtml">
+	<ui:define name="tituloPagina">Usuarios</ui:define>
+	<ui:define name="tituloFormulario">Formulario Usuario</ui:define>
+	<ui:define name="contenido">
+
+		<h:form id="frm" style="width:1000px">
+			<p:growl></p:growl>
+
+			<p:panelGrid columns="2">
+
+				<p:outputLabel value="Login: " />
+				<p:inputText id="txtNombre"
+					value="#{usuarioControlador.usuario.login}"
+					onkeypress="return validarNombres(event)" />
+
+				<p:outputLabel value="Password: " />
+				<p:password id="txtPass"
+					value="#{usuarioControlador.usuario.password}" />
+
+				<p:outputLabel value="Fecha Creacion: " />
+				<p:calendar id="txt_fecha"
+					value="#{usuarioControlador.usuario.fecha}" />
+				
+				<p:outputLabel value="Rol: " />	
+				<p:selectOneMenu value="#{usuarioControlador.rolRecuperado}">
+					<f:selectItem itemLabel="Seleccione un rol" itemValue="0"/>
+					<f:selectItems value="#{usuarioControlador.listaRoles}" var="roles"
+						itemLabel="#{roles.nombre}" itemValue="#{roles.rol}"/>
+				</p:selectOneMenu>
+			</p:panelGrid>
+
+			<p:panelGrid columns="2">
+				<p:commandButton value="Insertar"
+					action="#{usuarioControlador.insertar()}" update="@form"
+					disabled="#{controladorEmpleado.paraIngresar}" />
+				<p:commandButton value="Actualizar"
+					action="#{usuarioControlador.actualizar()}" update="@form"
+					disabled="#{controladorEmpleado.paraActualizar}" />
+			</p:panelGrid>
+			
+			
+			<p:dataTable value="#{usuarioControlador.listaUsuario}" var="usuarios" resizableColumns="true"
+				border="1" rows="8" paginator="true" paginatorPosition="bottom"
+				emptyMessage="No existen registros">
+				
+				<f:facet name="header">
+            		información Usuarios
+        		</f:facet>
+				
+				<p:column>
+					<f:facet name="header">Código</f:facet>
+					<h:outputLabel value="#{usuarios.id}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">Usuario</f:facet>
+					<h:outputLabel value="#{usuarios.login}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Password</f:facet>
+					<h:outputLabel value="#{usuarios.password}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">Fecha Creación</f:facet>
+					<h:outputLabel value="#{usuarios.fecha}" />
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">Rol</f:facet>
+					<h:outputLabel value="#{usuarios.rol.nombre}" />
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">Seleccionar</f:facet>
+					<p:commandButton value="Seleccionar" update="@form" process="@this"
+						action="#{usuarioControlador.Seleccionar()}">
+						<f:setPropertyActionListener value="#{usuarios}"
+							target="#{usuarioControlador.usuario}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>

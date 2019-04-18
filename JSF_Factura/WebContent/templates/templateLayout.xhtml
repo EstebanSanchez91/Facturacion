@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title><ui:insert name="tituloPagina">Gestion de Entidades</ui:insert>
+	</title>
+	<link rel="stylesheet" type="text/css"
+		href="#{request.contextPath}/css/base.css" />
+	<h:outputText value="#{filtroControlador.paginaAutenticada()}" />
+</h:head>
+<h:body>
+
+	<p:layout fullPage="true">
+
+		<p:layoutUnit position="north" size="50" header="Usuario: #{usuarioDataManager.usuario.login}"
+			resizable="true" collapsible="true">
+			<table align="center" cellpadding="0" cellspacing="0" border="0"
+				width="400">
+				<tr>
+					<td height="50%" align="center" valign="middle" width="50%"><h:graphicImage
+							value="/imagenes/clearminds.png" width="50%" height="50%" /></td>
+
+				</tr>
+			</table>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="south" size="100" header="Bottom"
+			resizable="true" collapsible="true">
+			<ui:insert name="autor">
+				<h:outputText value="Autor" />
+			</ui:insert>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="west" size="200" header="MENU"
+			resizable="true" closable="true" collapsible="true">
+			<h:form>
+				<p:menu model="#{menuControlador.model}" />
+			</h:form>
+		</p:layoutUnit>
+		<!--  
+		<p:layoutUnit position="east" size="200" header="Right"
+			resizable="true" closable="true" collapsible="true" effect="drop">
+			<h:outputText value="Right unit content." />
+		</p:layoutUnit>
+-->
+		<p:layoutUnit position="center">
+			<ui:insert name="contenido">
+				<h:outputText value="CENTRO" />
+			</ui:insert>
+		</p:layoutUnit>
+
+	</p:layout>
+
+	<ui:insert name="dialogo">
+
+	</ui:insert>
+
+</h:body>
+
+</html>

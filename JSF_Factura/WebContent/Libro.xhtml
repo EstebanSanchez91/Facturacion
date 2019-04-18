@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/clearTemplate.xhtml">
+	<ui:define name="tituloPagina">Libros</ui:define>
+	<ui:define name="tituloFormulario">Formulario Libro</ui:define>
+	<ui:define name="contenido">
+
+		<h:form id="form1" style="width:900px">
+			<p:growl></p:growl>
+
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Código: " />
+				<p:inputText id="txtCodigo" value="#{libroControlador.libro.id}" />
+
+				<p:outputLabel value="Categoría: " />
+				<p:selectOneMenu value="#{libroControlador.categoriaSelecionado}">
+					<f:selectItem itemLabel="Seleccione Una Categoría" itemValue="0" />
+					<f:selectItems value="#{categoriaControlador.categoriasRecuperadas}"
+						var="categoria" itemLabel="#{categoria.nombre}"
+						itemValue="#{categoria.id}">
+					</f:selectItems>
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Autor: " />
+				<p:selectOneMenu value="#{libroControlador.autorSelecionado}">
+					<f:selectItem itemLabel="Seleccione Un Autor" itemValue="0" />
+					<f:selectItems value="#{autorControlador.autoresRecuperados}"
+						var="autor" itemLabel="#{autor.nombre} #{autor.apellido}"
+						itemValue="#{autor.codigo}">
+					</f:selectItems>
+				</p:selectOneMenu>
+				
+				<p:outputLabel value="Título: " />
+				<p:inputText id="txtTitu" value="#{libroControlador.libro.titulo}" />
+				<p:outputLabel value="Fecha de publicación: " />
+				<p:calendar id="txtFecha" value="#{libroControlador.libro.fecha_publicacion}" />
+				
+				<p:outputLabel value="Precio: " />
+				<p:inputText id="txtPrecio" value="#{libroControlador.libro.precio}"/>
+			</p:panelGrid>
+		
+			<p:panelGrid columns="2">
+				<p:commandButton value="Insertar"
+					action="#{libroControlador.insertar()}" update="@form" disabled="#{controladorLibro.paraIngresar}"/>
+				<p:commandButton value="Actualizar"
+					action="#{libroControlador.actualizar()}" update="@form" disabled="#{controladorLibro.paraActualizar}"/>
+			</p:panelGrid>
+			
+			<p:dataTable value="#{libroControlador.lista}" var="items" resizableColumns="true"
+				border="1" paginator="true" paginatorPosition="bottom" 
+				emptyMessage="No existen registros">
+
+				<p:column>
+					<f:facet name="header">Código</f:facet>
+					<h:outputLabel value="#{items.id}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Título</f:facet>
+					<h:outputLabel value="#{items.titulo}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Autor</f:facet>
+					<h:outputLabel value="#{items.autor.nombre} #{items.autor.apellido}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Categoría</f:facet>
+					<h:outputLabel value="#{items.categoria.nombre}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Fecha</f:facet>
+					<h:outputLabel value="#{items.fecha_publicacion}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Precio</f:facet>
+					<h:outputLabel value="#{items.precio}" />
+				</p:column>
+				
+				
+				<p:column>
+					<f:facet name="header">Seleccionar</f:facet>
+					<p:commandButton value="Seleccionar" update="@form" process="@this"
+						action="#{libroControlador.Seleccionar()}">
+						<f:setPropertyActionListener value="#{items}"
+							target="#{libroControlador.libro}" />
+					</p:commandButton>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Eliminar</f:facet>
+					<p:commandButton value="Eliminar" update="@form" process="@this"
+						onclick="PF('dialog').show();">
+						
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog id="dlg1" widgetVar="dialog" header="DIALOGO" modal="true">
+			<h:form>
+				<h:outputText value="Esta seguro de eliminar el registro" />
+				<p:commandButton value="SI" action="#{libroControlador.eliminar()}"
+					update=":form1" />
+
+				<p:commandButton value="NO" onclick="PF('dialog').hide();"
+					update=":form1" />
+			</h:form>
+
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>
+
+</html>

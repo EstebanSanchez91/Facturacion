@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/clearTemplate.xhtml">
+	<ui:define name="tituloPagina">Nacionalidad</ui:define>
+	<ui:define name="tituloFormulario">Formulario Nacionalidad</ui:define>
+	<ui:define name="contenido">
+
+		<h:form id="frm" style="width:1000px">
+			<p:growl></p:growl>
+
+			<p:panelGrid columns="2">
+
+				<p:outputLabel value="Pais: " />
+				<p:inputText id="txtPais"
+					value="#{nacionalidadControlador.nac.pais}"
+					onkeypress="return validarNombres(event)" />
+
+				<p:outputLabel value="Nombre: " />
+				<p:inputText id="txtDesc"
+					value="#{nacionalidadControlador.nac.nombre}" />
+				
+			</p:panelGrid>
+
+			<p:panelGrid columns="2">
+				<p:commandButton value="Insertar"
+					action="#{nacionalidadControlador.insertar()}" update="@form"
+					disabled="#{controladorEmpleado.paraIngresar}" />
+				<p:commandButton value="Actualizar"
+					action="#{nacionalidadControlador.actualizar()}" update="@form"
+					disabled="#{controladorEmpleado.paraActualizar}" />
+			</p:panelGrid>
+			
+			
+			<p:dataTable value="#{nacionalidadControlador.listaNac}" var="nac" resizableColumns="true"
+				border="1" rows="8" paginator="true" paginatorPosition="bottom"
+				emptyMessage="No existen registros">
+				
+				<f:facet name="header">
+            		información Roles
+        		</f:facet>
+				
+				<p:column>
+					<f:facet name="header">Código</f:facet>
+					<h:outputLabel value="#{nac.id}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">Nombre</f:facet>
+					<h:outputLabel value="#{nac.nombre}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Pais</f:facet>
+					<h:outputLabel value="#{nac.pais}" />
+				</p:column>
+				
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>

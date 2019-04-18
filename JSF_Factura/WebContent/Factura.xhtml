@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/clearTemplate.xhtml">
+	<ui:define name="tituloPagina">Factura</ui:define>
+	<ui:define name="tituloFormulario">Faxtura</ui:define>
+	<ui:define name="contenido">
+
+		<h:form id="frm" style="width:1000px">
+			<p:growl></p:growl>
+
+			<p:panelGrid columns="2">
+
+				<p:outputLabel value="Fecha Factura: " />
+				<p:calendar id="txtFecha"
+					value="#{facturaControlador.factura.fecha}" />
+
+				<p:outputLabel value="Nº Factura: " />
+				<p:inputText id="txtNumFactura"
+					value="#{facturaControlador.factura.id}" />
+			</p:panelGrid>
+
+			<p:panelGrid columns="3">
+				<p:outputLabel value="ID: " />
+				<p:inputText id="txtIdCliente"
+					value="#{facturaControlador.clienteSeleccionado}" />
+				<p:commandButton value="Buscar Cliente"
+					action="#{facturaControlador.buscarCliente()}" update="@form" />
+
+				<p:outputLabel id="txtCliente" value="Nombre: " />
+				<p:outputLabel id="txtNombreCliente"
+					value="#{facturaControlador.factura.cliente.nombre}" />
+				<p:outputLabel id="txtApellidoCliente"
+					value="#{facturaControlador.factura.cliente.apellido}" />
+
+				<p:outputLabel value="ID: " />
+				<p:inputText id="txtIdLibro"
+					value="#{detalleFacturaControlador.libroSeleccionado}" />
+				<p:commandButton value="Buscar Libro: "
+					action="#{detalleFacturaControlador.buscarLibro()}" update="@form" />
+
+				<p:outputLabel id="txtLibro" value="Titulo: " />
+				<p:outputLabel id="txtNombreLibro"
+					value="#{detalleFacturaControlador.detalle.libro.titulo}" />
+				<p:outputLabel id="txtPrecioLibro"
+					value="#{detalleFacturaControlador.detalle.libro.precio}" />
+			</p:panelGrid>
+
+			<p:panelGrid columns="3">
+				<p:outputLabel value="Cantidad: " />
+				<p:inputText id="txtCantidad"
+					value="#{detalleFacturaControlador.detalle.cantidad}" />
+				<p:commandButton value="Agregar Detalle"
+					action="#{detalleFacturaControlador.agregar()}" update="TblDetalle" />
+			</p:panelGrid>
+
+			<p:dataTable id="TblDetalle"
+				value="#{detalleFacturaControlador.listadetalle}" var="detalles"
+				resizableColumns="true" border="1" rows="8" paginator="true"
+				paginatorPosition="bottom" emptyMessage="No existen registros">
+
+				<f:facet name="header">
+            		información Detalles
+        		</f:facet>
+
+				<p:column>
+					<f:facet name="header">Código</f:facet>
+					<h:outputLabel value="#{detalles.id}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">Titulo</f:facet>
+					<h:outputLabel value="#{detalles.libro.titulo}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Cantidad</f:facet>
+					<h:outputLabel value="#{detalles.cantidad}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">Valor Unitario</f:facet>
+					<h:outputLabel value="#{detalles.libro.precio}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">Subtotal</f:facet>
+					<h:outputLabel value="#{detalles.subtotal}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">Acciones</f:facet>
+					<p:commandButton value="Eliminar" update="@form" process="@this"
+						action="#{detalleFacturaControlador.eliminar()}">
+						<f:setPropertyActionListener value="#{detalles}"
+							target="#{detalleFacturaControlador.detalle}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:panelGrid id="subtotal" columns="2" style="margin-top:20px">
+				<h:outputText value="Subtotal: " />
+				<h:outputText value="#{detalleFacturaControlador.subtotal}" />
+				<h:outputText value="IVA: " />
+				<h:outputText value="#{detalleFacturaControlador.iva}" />
+				<h:outputText value="Total: " />
+				<h:outputText value="#{detalleFacturaControlador.total}" />
+			</p:panelGrid>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>
